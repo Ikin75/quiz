@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Input Kuis</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="manifest" href="/manifest-admin.json" />
+    <meta name="theme-color" content="#2b3a67" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Panel Admin Kuis</h1>
+      <form id="quizForm">
+        <div class="form-group">
+          <label>Upload Gambar (Opsional)</label>
+          <input type="file" id="imageInput" name="image" accept="image/*" />
+        </div>
+
+        <div class="form-group">
+          <label>Pertanyaan</label>
+          <input type="text" id="questionInput" required />
+        </div>
+
+        <div class="form-group">
+          <label>Pilihan A</label>
+          <input type="text" id="optionA" required />
+        </div>
+        <div class="form-group">
+          <label>Pilihan B</label>
+          <input type="text" id="optionB" required />
+        </div>
+        <div class="form-group">
+          <label>Pilihan C</label>
+          <input type="text" id="optionC" required />
+        </div>
+
+        <div class="form-group">
+          <label>Jawaban yang Benar (Ketik Hurufnya: A, B, atau C)</label>
+          <select id="correctAnswer">
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Upload Background Sendiri (Opsional)</label>
+          <input
+            type="file"
+            id="backgroundInput"
+            name="backgroundImage"
+            accept="image/*"
+          />
+          <small style="color: #ccc; font-size: 12px"
+            >Jika diisi, background ini akan menggantikan background default
+            (biru).</small
+          >
+        </div>
+
+        <button type="submit">Simpan Soal</button>
+
+        <!-- Tambahkan di bawah </form> -->
+        <hr style="border: 1px solid #ccc; margin: 20px 0" />
+        <h3>Daftar Soal yang Sudah Dibuat:</h3>
+        <div id="questionList" style="margin-bottom: 20px">
+          <!-- Daftar soal akan muncul di sini -->
+        </div>
+      </form>
+      <a href="index.html">Lihat Halaman Kuis</a>
+    </div>
+
+    <script src="admin.js"></script>
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker
+            .register("/sw.js")
+            .then((registration) => {
+              console.log("ServiceWorker registered:", registration);
+            })
+            .catch((error) => {
+              console.log("ServiceWorker registration failed:", error);
+            });
+        });
+      }
+    </script>
+  </body>
+</html>

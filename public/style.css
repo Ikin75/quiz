@@ -1,0 +1,170 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background 0.5s ease;
+  background-size: cover; /* Agar gambar background menutupi layar */
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.bg-blue {
+  background: linear-gradient(135deg, #2b3a67, #1e2749);
+}
+.bg-beach {
+  background: linear-gradient(to bottom, #87ceeb, #f0e68c);
+}
+.bg-dark {
+  background: linear-gradient(135deg, #000000, #434343);
+}
+
+.container,
+.quiz-container {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 500px;
+}
+
+/* Perbaikan Form Admin */
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #333; /* Warna teks label lebih gelap */
+}
+
+input[type="text"],
+input[type="file"],
+select {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #ccc; /* Garis tepi abu-abu yang jelas */
+  border-radius: 8px;
+  background-color: #ffffff; /* Latar putih agar kontras */
+  color: #333; /* Warna teks yang diketik */
+  font-size: 16px;
+  box-sizing: border-box; /* Agar lebarnya pas tidak melebihi container */
+  margin-top: 5px;
+  outline: none; /* Menghilangkan outline default biru saat diklik */
+}
+
+/* Efek saat kolom diklik */
+input[type="text"]:focus,
+select:focus {
+  border-color: #f39c12; /* Garis berubah oranye saat fokus */
+  box-shadow: 0 0 5px rgba(243, 156, 18, 0.5);
+}
+
+/* Gaya untuk kotak upload file */
+input[type="file"] {
+  padding: 10px;
+  background-color: #f9f9f9;
+  border: 1px dashed #999; /* Garis putus-putus untuk upload */
+}
+
+button {
+  background-color: #f39c12;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.options button {
+  display: block;
+  background-color: #e67e22;
+  margin-bottom: 10px;
+  text-align: left;
+  padding-left: 20px;
+}
+
+.options button:hover {
+  background-color: #d35400;
+}
+
+/* Tambahkan di bawah CSS sebelumnya */
+.options button.correct {
+  background-color: #2ecc71 !important; /* Hijau */
+  border: 2px solid #27ae60;
+  color: white;
+}
+
+.options button.wrong {
+  background-color: #e74c3c !important; /* Merah */
+  border: 2px solid #c0392b;
+  color: white;
+}
+
+.options button:disabled {
+  cursor: not-allowed;
+  opacity: 0.9;
+}
+
+.timer {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #f1c40f; /* Warna kuning emas */
+}
+
+.container {
+  background-color: #f4f4f9; /* Warna abu-abu sangat muda */
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Pastikan form admin terlihat jelas */
+#quizForm input[type="text"],
+#quizForm input[type="file"],
+#quizForm select {
+  border: 2px solid #ccc !important;
+  background-color: #ffffff !important;
+  color: #333 !important;
+  padding: 12px !important;
+  border-radius: 8px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  margin-top: 5px !important;
+  font-size: 16px !important;
+  outline: none !important;
+}
+
+#quizForm label {
+  font-weight: bold !important;
+  color: #222 !important;
+  margin-bottom: 8px !important;
+  display: block !important;
+}
+
+#quizForm input[type="text"]:focus,
+#quizForm select:focus {
+  border-color: #f39c12 !important;
+  box-shadow: 0 0 5px rgba(243, 156, 18, 0.5) !important;
+}
+
+/* Untuk background container admin */
+body {
+  background-color: #f4f4f9 !important; /* Warna abu muda agar kontras dengan kotak putih */
+}
+
+.container {
+  background-color: #ffffff !important;
+  border-radius: 15px !important;
+  padding: 30px !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
+}
