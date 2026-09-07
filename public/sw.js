@@ -1,4 +1,4 @@
-const CACHE_NAME = "kuis-v1";
+const CACHE_NAME = "kuis-v2"; // Ganti versi agar cache lama terhapus
 const urlsToCache = [
   "/",
   "/admin.html",
@@ -13,7 +13,27 @@ self.addEventListener("install", (event) => {
   );
 });
 
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => {
+          if (cacheName !== CACHE_NAME) {
+            return caches.delete(cacheName);
+          }
+        }),
+      );
+    }),
+  );
+});
+
 self.addEventListener("fetch", (event) => {
+  // PENTING: Jangan pernah sentuh request API! Biarkan langsung ke server
+  if (event.request.url.includes("/api/")) {
+    return;
+  }
+
+  // Untuk file lain (html, css, js, gambar)
   event.respondWith(
     caches
       .match(event.request)

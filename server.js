@@ -116,6 +116,13 @@ app.delete("/api/questions/:id", (req, res) => {
   res.json({ message: "Soal berhasil dihapus!" });
 });
 
-// PENTING: JANGAN gunakan app.listen() di Vercel!
-// Ganti dengan module.exports agar Vercel yang menjalankan server
+// Biarkan Vercel yang menjalankan server
+if (require.main === module) {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`Server berjalan di http://localhost:${PORT}`);
+  });
+}
+
+// Export untuk Vercel
 module.exports = app;
