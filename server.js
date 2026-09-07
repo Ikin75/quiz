@@ -5,17 +5,18 @@ const fs = require("fs");
 const path = require("path");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static("public")); // Agar frontend bisa diakses
-app.use("/uploads", express.static("uploads")); // Agar gambar bisa dilihat
 
-// Konfigurasi upload gambar
+// PENTING: Gunakan path.join agar Vercel menemukan folder public
+app.use(express.static(path.join(__dirname, "public")));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+// Konfigurasi upload gambar (Soal & Background)
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/");
+    cb(null, path.join(__dirname, "uploads/"));
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + path.extname(file.originalname));
@@ -23,7 +24,15 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-// API untuk menambah soal baru (UBAH upload.single menjadi upload.fields)
+// Baca database soal (file JSON)
+const getQuestions = () => {
+  if (!fs.existsSync(path.join(__dirname, "questions.json"))) return [];
+  return JSON.parse(
+    fs.readFileSync(path.join(__dirname, "questions.json"), "utf8"),
+  );
+};
+
+// API untuk menambah soal baru
 app.post(
   "/api/questions",
   upload.fields([
@@ -34,7 +43,6 @@ app.post(
     const { question, optionA, optionB, optionC, correctAnswer, background } =
       req.body;
 
-    // Ambil path gambar
     const imageUrl = req.files["image"]
       ? `/uploads/${req.files["image"][0].filename}`
       : null;
@@ -42,7 +50,6 @@ app.post(
       ? `/uploads/${req.files["backgroundImage"][0].filename}`
       : null;
 
-    // Jika user upload background gambar, pakai itu. Jika tidak, pakai class default 'bg-blue'
     const backgroundValue = bgImageUrl ? bgImageUrl : background || "bg-blue";
 
     const newQuestion = {
@@ -56,36 +63,14 @@ app.post(
 
     const allQuestions = getQuestions();
     allQuestions.push(newQuestion);
-    fs.writeFileSync("questions.json", JSON.stringify(allQuestions, null, 2));
+    fs.writeFileSync(
+      path.join(__dirname, "questions.json"),
+      JSON.stringify(allQuestions, null, 2),
+    );
 
     res.json({ message: "Soal berhasil ditambahkan!", data: newQuestion });
   },
 );
-
-// Baca database soal (file JSON)
-const getQuestions = () => {
-  if (!fs.existsSync("questions.json")) return [];
-  return JSON.parse(fs.readFileSync("questions.json", "utf8"));
-};
-
-// API untuk menambah soal baru
-app.post("/api/questions", upload.single("image"), (req, res) => {
-  // Tambahkan background di sini
-  const { question, optionA, optionB, optionC, correctAnswer, background } =
-    req.body;
-  const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
-
-  const newQuestion = {
-    id: Date.now(),
-    question,
-    image: imageUrl,
-    options: [optionA, optionB, optionC],
-    correctAnswer: correctAnswer,
-    background: background || "bg-blue", // Default ke biru jika tidak dipilih
-  };
-
-  // ... kode sebelumnya tetap sama ...
-});
 
 // API untuk mengambil semua soal
 app.get("/api/questions", (req, res) => {
@@ -94,10 +79,9 @@ app.get("/api/questions", (req, res) => {
 
 // API untuk menghapus soal beserta gambarnya
 app.delete("/api/questions/:id", (req, res) => {
-  const id = Number(req.params.id); // Ubah string ID ke number
+  const id = Number(req.params.id);
   let allQuestions = getQuestions();
 
-  // Cari index soal berdasarkan ID
   const questionIndex = allQuestions.findIndex((q) => q.id === id);
 
   if (questionIndex === -1) {
@@ -106,34 +90,32 @@ app.delete("/api/questions/:id", (req, res) => {
 
   const deletedQuestion = allQuestions[questionIndex];
 
-  // Hapus file gambar soal jika ada
   if (deletedQuestion.image) {
-    const imagePath = path.join(__dirname, deletedQuestion.image); // /uploads/xxx.jpg
+    const imagePath = path.join(__dirname, deletedQuestion.image);
     if (fs.existsSync(imagePath)) {
-      fs.unlinkSync(imagePath); // Hapus file dari folder uploads
+      fs.unlinkSync(imagePath);
     }
   }
 
-  // Hapus file background jika ada
   if (
     deletedQuestion.background &&
     deletedQuestion.background.startsWith("/uploads/")
   ) {
     const bgPath = path.join(__dirname, deletedQuestion.background);
     if (fs.existsSync(bgPath)) {
-      fs.unlinkSync(bgPath); // Hapus file background
+      fs.unlinkSync(bgPath);
     }
   }
 
-  // Hapus data soal dari array
   allQuestions.splice(questionIndex, 1);
-
-  // Simpan kembali ke questions.json
-  fs.writeFileSync("questions.json", JSON.stringify(allQuestions, null, 2));
+  fs.writeFileSync(
+    path.join(__dirname, "questions.json"),
+    JSON.stringify(allQuestions, null, 2),
+  );
 
   res.json({ message: "Soal berhasil dihapus!" });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server berjalan di http://localhost:${PORT}`);
-});
+// PENTING: JANGAN gunakan app.listen() di Vercel!
+// Ganti dengan module.exports agar Vercel yang menjalankan server
+module.exports = app;
